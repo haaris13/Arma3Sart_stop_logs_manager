@@ -27,6 +27,24 @@ Ce projet est une **application Python avec interface graphique** permettant de 
 
 
 ---
+---
+
+## Téléchargement (Windows)
+
+> Pas envie d’installer Python ou lancer le script manuellement ?
+
+Télécharge directement l’application Windows prête à l’emploi :
+
+### [ Télécharger Arma3ServManager.exe](./Arma3ServManager.exe)
+
+- Aucun besoin d’installation
+- Double-cliquez simplement pour lancer l’application
+- Compatible Windows 10 / 11
+
+Si Windows vous affiche un avertissement de sécurité, cliquez sur **“Informations complémentaires” → “Exécuter quand même”** (car le fichier n’est pas signé numériquement, mais il est sûr).
+
+---
+
 
 ## Prérequis
 
