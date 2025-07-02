@@ -20,7 +20,11 @@ Ce projet est une **application Python avec interface graphique** permettant de 
 
 ## Capture d’écran
 
-> *(à insérer une fois le script lancé et une capture prise)*
+## 🖥️ Aperçu de l'interface
+
+![Aperçu de l'application](./1.png)
+![Aperçu de l'application](./2.png)
+
 
 ---
 
