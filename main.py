@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox, scrolledtext, filedialog
+from tkinter import ttk, messagebox, scrolledtext
 import subprocess
 import os
 import time
@@ -18,7 +18,6 @@ DEFAULT_CONFIG = {
     "DISCORD_WEBHOOK": ""
 }
 
-# === CONFIGURATION ===
 def load_config():
     if not os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, "w") as f:
@@ -34,7 +33,6 @@ def save_config(conf):
 config = load_config()
 PID_FILE = os.path.join(config["ARMA_DIR"], "server.pid")
 
-# === FONCTIONS SERVEUR ===
 def is_server_running():
     if os.path.isfile(PID_FILE):
         with open(PID_FILE) as f:
@@ -110,10 +108,10 @@ def launch_loop_thread():
     t.start()
     messagebox.showinfo("Loop", f"Redémarrage automatique lancé ({config['RESTART_INTERVAL']//3600}h).")
 
-# === FENÊTRE DE CONFIGURATION ===
 def open_config_window():
     win = tk.Toplevel()
     win.title("Configuration")
+    win.configure(bg="#1e1e1e")
     win.geometry("500x400")
 
     entries = {}
@@ -128,8 +126,8 @@ def open_config_window():
     ]
 
     for i, (key, label) in enumerate(fields):
-        tk.Label(win, text=label).grid(row=i, column=0, sticky='w', padx=10, pady=5)
-        e = tk.Entry(win, width=50)
+        ttk.Label(win, text=label, foreground="white", background="#1e1e1e").grid(row=i, column=0, sticky='w', padx=10, pady=5)
+        e = ttk.Entry(win, width=45)
         e.grid(row=i, column=1, padx=10)
         e.insert(0, str(config.get(key, "")))
         entries[key] = e
@@ -142,33 +140,45 @@ def open_config_window():
         messagebox.showinfo("Config", "Configuration enregistrée.")
         win.destroy()
 
-    tk.Button(win, text="Enregistrer", command=save_and_close).grid(row=len(fields), column=0, columnspan=2, pady=20)
+    ttk.Button(win, text="Enregistrer", command=save_and_close).grid(row=len(fields), column=0, columnspan=2, pady=20)
 
-# === INTERFACE PRINCIPALE ===
 def create_gui():
     root = tk.Tk()
     root.title("Gestionnaire Arma 3 Server")
-    root.geometry("600x500")
+    root.geometry("650x550")
+    root.configure(bg="#1e1e1e")
 
-    tk.Button(root, text="Démarrer le serveur", width=25, command=start_server).pack(pady=5)
-    tk.Button(root, text="Arrêter le serveur", width=25, command=stop_server).pack(pady=5)
-    tk.Button(root, text="Redémarrer", width=25, command=restart_server).pack(pady=5)
-    tk.Button(root, text="Mettre à jour via SteamCMD", width=25, command=update_server).pack(pady=5)
-    tk.Button(root, text="Lancer redémarrage auto", width=25, command=launch_loop_thread).pack(pady=5)
-    tk.Button(root, text="Configurer", width=25, command=open_config_window).pack(pady=5)
+    style = ttk.Style(root)
+    style.theme_use("clam")
 
-    tk.Label(root, text="Derniers logs :").pack(pady=10)
-    log_text = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=70, height=10)
+    style.configure("TButton", foreground="white", background="#2d2d2d", padding=6)
+    style.map("TButton", background=[('active', '#444')])
+    style.configure("TLabel", background="#1e1e1e", foreground="white")
+    style.configure("TEntry", fieldbackground="#2d2d2d", foreground="white")
+    
+    btns = [
+        ("Démarrer le serveur", start_server),
+        ("Arrêter le serveur", stop_server),
+        ("Redémarrer", restart_server),
+        ("Mettre à jour via SteamCMD", update_server),
+        ("Lancer redémarrage auto", launch_loop_thread),
+        ("Configurer", open_config_window)
+    ]
+
+    for text, cmd in btns:
+        ttk.Button(root, text=text, width=30, command=cmd).pack(pady=5)
+
+    ttk.Label(root, text="Derniers logs :").pack(pady=10)
+    log_text = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=75, height=10, bg="#1e1e1e", fg="white", insertbackground="white")
     log_text.pack()
 
     def refresh_logs():
         log_text.delete(1.0, tk.END)
         log_text.insert(tk.END, get_last_log())
 
-    tk.Button(root, text="Rafraîchir les logs", command=refresh_logs).pack(pady=5)
+    ttk.Button(root, text="Rafraîchir les logs", command=refresh_logs).pack(pady=10)
 
     root.mainloop()
 
-# === MAIN ===
 if __name__ == "__main__":
     create_gui()
